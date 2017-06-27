@@ -7,8 +7,15 @@ Assignment 2 for UCLA CS 174A
 "3D Ski Simulator" is a third-person endless runner/skiing simulator.
 Control your character and avoid obstacles to reach the farthest distance possible. The environment is procedurally generated with trees, rocks, and an occasional grizzly bear. A randomly generated mountain range is also visible on the horizon.
 
+## Getting Started
+1. Clone this repository
+2. Run `./start` in project directory to open webpage in browser
+3. Refresh page if game does not load
+
+**Note**: Chrome is required for this project to run properly
+
 ## Controls
-- **Left/right arrow keys**: Movement
+- **Left/right arrow keys**: Player movement
 - **P**: Pause game
 - **T**: shows debug screen
 - Reload page to restart game

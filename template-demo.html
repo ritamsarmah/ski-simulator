@@ -35,12 +35,11 @@ index.html - The web page document containing the canvas (drawing surface), that
   for ( let q of window.location.search.substring(1).split("&") ) //  a url and display it on a page?")
     demos.push( decodeURIComponent( q || "" ).replace(/[^_\W]+/g, (s) => s.charAt(0).toUpperCase() + s.substr(1).toLowerCase() ) );
 </script>
-</head><body>More demos:
-<span style="padding-left:20px;"></span><a href="?Ski_Sim">                 Demetri's 3D Ski Simulator</a>
+</head><body>
 <canvas id="gl-canvas" width="800" height="600"></canvas><p>
 <a href="#" onclick='document.getElementById( "instructions" ).style = "display:block"; this.style = "display:none";'>
 Click for instructions </a><div id="instructions" style = "display:none">
-Demetri's 3D Ski Simulator Instructions
+3D Ski Simulator Instructions
 <ul>
     <li> Use the left and right arrow keys to move your character
     <li> Avoid obstacles to reach the farthest distance possible.
