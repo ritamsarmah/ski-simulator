@@ -1,0 +1,54 @@
+<!-- UCLA's Graphics Example Code (Javascript and C++ translations available), by Garett Ridge for CS174a.
+index.html - The web page document containing the canvas (drawing surface), that launches your javascript files //-->
+<!DOCTYPE html><html>
+<head>  <meta charset="UTF-8"/>
+<script type="text/javascript" src="MV.js"                       ></script>  <!--  Javascript "include" files.  Any code in them gets   //-->
+<script type="text/javascript" src="webgl-obj-loader.js"         ></script>  <!--  executed as part of the page loading.                //-->
+<script type="text/javascript" src="tinywebgl-ucla.js"           ></script>  <!--  This is the one with all the library functions   //-->
+<script type="text/javascript" src="example-scene-components.js" ></script>
+<script type="text/javascript" src="example-shapes.js"           ></script>
+<script type="text/javascript" src="example-shaders.js"          ></script>
+<script type="text/javascript" src="ski-sim.js"          ></script>
+<script type="text/javascript"> "use strict"
+  window.onload = function init()           // ********************* OUR WHOLE PROGRAM'S ENTRY POINT *********************
+    {                                                                                         // Firstly, browsers support something like up to 16 instances of WebGL
+      window.contexts = { main_canvas: new Canvas_Manager( "gl-canvas", Color( 0, 0, 0, 1 ) ) }; // per page.  Construct a Canvas_Manager, which instances a WebGL context
+                                                                                                 // for our main canvas.  Set your background color here too.
+      var shaders = [ "Phong_Model", "Funny_Shader", "Fake_Bump_Map" ];                          // Now put all our shader programs in the GPU.
+      for( let s of shaders )        contexts["main_canvas"].shaders_in_use [ s ] = ( new window[s]( contexts["main_canvas"].gl ) );
+
+                                  // IMPORTANT: -- You have to include all your new image files in the following array:
+      var texture_files_to_load = [ "text.png", "snow.jpg", "sky.jpg", "leather.jpg", "mountain.jpg", "bear.jpg" ];     // Put all our texture images in the GPU.
+      for( let f of texture_files_to_load ) contexts["main_canvas"].textures_in_use[ f ] = ( new Texture( contexts["main_canvas"].gl, f, true ) );
+                                                                                      // We instantiate some of our custom "Scene_Component" subclasses and register
+      var scene_components = [ "Debug_Screen", "Example_Camera", "Flag_Toggler", "Text_Screen" ];    // objects to their master "Canvas_Manager" object -- which WebGL calls
+      if( demos[0] == "" ) scene_components.push( "Ski_Sim" );              // upon every time a draw / keyboard / mouse event happens.
+      else for( let d of demos ) scene_components.push( d.replace(/-/g,"_") );  // (This line of code can parse the URL and instantiate the demos named there)
+      for( let s of scene_components ) contexts["main_canvas"].register_scene_component( new window[s]( contexts["main_canvas"] ) ); // Register the demos with
+                                                                                                                                     // their Canvas_Manager.
+      for( let c in contexts ) contexts[c].render();     // Call render() for each WebGL context on this page.  Then render() will re-queue itself for more calls.
+    }
+  window.requestAnimFrame = ( function(w)           // Find the correct browser's version of requestAnimationFrame() needed for queue-ing up re-display events:
+    { return w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame || w.oRequestAnimationFrame || w.msRequestAnimationFrame ||
+      function( callback, element ) { w.setTimeout(callback, 1000/60);  }; } )( window );
+  var demos = [];                                                 // (For explanation of this part see stackoverflow on "How to pass a parameter to a javascript through
+  for ( let q of window.location.search.substring(1).split("&") ) //  a url and display it on a page?")
+    demos.push( decodeURIComponent( q || "" ).replace(/[^_\W]+/g, (s) => s.charAt(0).toUpperCase() + s.substr(1).toLowerCase() ) );
+</script>
+</head><body>More demos:
+<span style="padding-left:20px;"></span><a href="?Ski_Sim">                 Demetri's 3D Ski Simulator</a>
+<canvas id="gl-canvas" width="800" height="600"></canvas><p>
+<a href="#" onclick='document.getElementById( "instructions" ).style = "display:block"; this.style = "display:none";'>
+Click for instructions </a><div id="instructions" style = "display:none">
+Demetri's 3D Ski Simulator Instructions
+<ul>
+    <li> Use the left and right arrow keys to move your character
+    <li> Avoid obstacles to reach the farthest distance possible.
+    <li> Pause game with 'p'
+    <li> Reload page to try again
+    <li> Press t to toggle debug text
+    <li> The keys ALT+n and ALT+g switch shading behaviors.  ALT+n directly shows you normal vectors on shapes by interpreting X,Y,Z vectors
+    as R,G,B colors.  ALT+g toggles Gouraud shading vs Smooth Phong shading with textures.
+    <li> Press up and down to cycle through a live feed of important strings and values of the program --
+    the code for each Scene_Component includes a function where it can provide these.
+</div></p></body></html>
